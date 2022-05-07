@@ -1,5 +1,4 @@
 ---
----
 galaxy_info:
   role_name: hobo.ansible.docker-service
   author: hobointhecorner
