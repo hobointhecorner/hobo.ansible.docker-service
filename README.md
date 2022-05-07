@@ -1,6 +1,16 @@
 # Hobo.Ansible.Docker-Service
 Configure a systemd service to run a docker container either persistently or using the OnCalendar timer event
 
+## Using this role
+Run `ansible-galaxy install git+https://github.com/hobo.ansible.docker-service.git` or add the following to your `requirements.yml`:
+
+```yaml
+roles:
+  - src: git+https://github.com/hobo.ansible.docker-service.git
+    version: v1
+    name: hobo.docker-service
+```
+
 ## Variables
 | Name                  | Type         | Required | Default             | Description |
 |-----------------------|--------------|----------|---------------------|-------------|
