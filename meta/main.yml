@@ -1,0 +1,11 @@
+---
+---
+galaxy_info:
+  role_name: hobo.ansible.docker-service
+  author: hobointhecorner
+  description: Install and configure a docker container systemd service
+  license: MPL-2.0
+
+  galaxy_tags: []
+
+dependencies: []

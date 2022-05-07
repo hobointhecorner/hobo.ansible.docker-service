@@ -1,0 +1,14 @@
+#!/bin/bash
+
+/usr/bin/docker run \
+  --pull {{ container_pull }} --name $1 --rm \
+{% if container_dotenv_file != None %}
+  --env-file {{ service_config_dir }}/.env \
+{% endif %}
+{% for volume in container_volumes %}
+  -v {{ volume }} \
+{% endfor %}
+{% for port in container_ports %}
+  -p {{ port }} \
+{% endfor %}
+  {{ service_container }}

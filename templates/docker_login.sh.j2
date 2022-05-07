@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat {{ service_config_dir }}/.registry_token | docker login {{ container_registry }} -u {{ registry_username }} --password-stdin

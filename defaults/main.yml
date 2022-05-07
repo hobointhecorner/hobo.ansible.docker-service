@@ -1,0 +1,17 @@
+---
+container_image_tag: latest
+container_dotenv_file:
+container_ports: []
+container_volumes: []
+container_pull: missing # always | missing | never
+
+registry_username:
+registry_password:
+
+service_type: service # service | timer
+service_config_dir: "/opt/{{ service_name }}"
+service_description: "{{ service_name }}"
+service_user:
+service_group:
+
+timer_interval:

@@ -1,0 +1,85 @@
+---
+- name: Set facts
+  set_fact:
+    service_container: "{{ container_registry }}/{{ container_image }}:{{ container_image_tag }}"
+    registry_login_required: >-
+      {% if registry_username != None and registry_password != None -%}
+      {{ true }}
+      {%- else -%}
+      {{ false }}
+      {%- endif %}
+
+- name: Ensure config directory
+  become: yes
+  file:
+    path: "{{ service_config_dir }}"
+    state: directory
+    owner: "{{ service_user|default('root', true) }}"
+    group: "{{ service_group|default('root', true) }}"
+    mode: "2770"
+
+- when: registry_login_required
+  block:
+    - name: Ensure registry token file
+      become: yes
+      notify:
+        - Reload docker service
+      copy:
+        dest: "{{ service_config_dir }}/.registry_token"
+        content: "{{ registry_password }}"
+        owner: "{{ service_user|default('root', true) }}"
+        group: "{{ service_group|default('root', true) }}"
+        mode: "660"
+
+    - name: Ensure registry login script
+      become: yes
+      template:
+        src: templates/docker_login.sh.j2
+        dest: "{{ service_config_dir }}/docker_login.sh"
+        owner: "{{ service_user|default('root', true) }}"
+        group: "{{ service_group|default('root', true) }}"
+        mode: "775"
+      notify:
+        - Reload docker service
+
+- name: Template env file
+  when: container_dotenv_file != None
+  become: yes
+  notify:
+    - Reload docker service
+  template:
+    src: "{{ container_dotenv_file|default('.env.j2') }}"
+    dest: "{{ service_config_dir }}/.env"
+    owner: "{{ service_user|default('root', true) }}"
+    group: "{{ service_group|default('root', true) }}"
+    mode: "660"
+
+- name: Template service script
+  become: yes
+  notify:
+    - Reload docker service
+  template:
+    src: start_service.sh.j2
+    dest: "{{ service_config_dir }}/start_service.sh"
+    owner: "{{ service_user|default('root', true) }}"
+    group: "{{ service_group|default('root', true) }}"
+    mode: "770"
+
+- name: Template service files
+  become: yes
+  notify:
+    - Reload docker service
+  loop: >-
+    {%- if service_type|lower == 'service' -%}
+    {{ ['service'] }}
+    {%- elif service_type|lower == 'timer' -%}
+    {{ ['service', 'timer'] }}
+    {%- else -%}
+    {{ omit }}
+    {%- endif -%}
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/systemd/system/{{ service_name }}.{{ item }}
+    owner: "{{ service_user|default('root', true) }}"
+    group: "{{ service_group|default('root', true) }}"
+    mode: "644"

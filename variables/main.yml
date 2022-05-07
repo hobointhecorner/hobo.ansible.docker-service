@@ -1,0 +1,4 @@
+---
+service_name:
+container_registry:
+container_image:

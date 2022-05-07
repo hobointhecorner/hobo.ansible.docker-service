@@ -1,0 +1,26 @@
+[Unit]
+Description={{ service_description }}
+After=docker.service
+Requires=docker.service
+
+[Service]
+{% if service_type|lower == 'timer' %}
+Type=oneshot
+{% elif service_type|lower == 'service' %}
+Restart=always
+{% endif %}
+{% if service_user != None and service_group != None %}
+User={{ service_user }}
+Group={{ service_group }}
+{% endif %}
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+{% if registry_login_required %}
+ExecStartPre={{ service_config_dir }}/docker_login.sh
+{% endif %}
+ExecStart={{ service_config_dir }}/start_service.sh %n
+
+{% if service_type|lower == 'service' %}
+[Install]
+WantedBy=multi-user.target
+{% endif %}

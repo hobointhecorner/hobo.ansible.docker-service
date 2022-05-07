@@ -1,0 +1,10 @@
+[Unit]
+Description={{ service_description }}
+
+[Timer]
+OnCalendar={{ timer_interval }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

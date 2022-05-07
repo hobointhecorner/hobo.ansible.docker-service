@@ -1,0 +1,13 @@
+---
+- name: Reload docker service
+  become: yes
+  systemd:
+    name: "{{ service_name }}.{{ service_type }}"
+    daemon_reload: yes
+    enabled: yes
+    state: >-
+      {%- if service_type|lower == 'service' -%}
+      restarted
+      {%- else -%}
+      {{ omit }}
+      {%- endif -%}
