@@ -8,7 +8,6 @@ Run `ansible-galaxy install git+https://github.com/hobo.ansible.docker-service.g
 roles:
   - src: git+https://github.com/hobo.ansible.docker-service.git
     version: v1
-    name: hobo.docker-service
 ```
 
 ## Variables
