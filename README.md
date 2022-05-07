@@ -3,7 +3,7 @@ Configure a systemd service to run a docker container either persistently or usi
 
 ## Variables
 | Name                  | Type                      | Required | Default             | Description |
-----------------------------------------------------------------------------------------------------
+|-----------------------|---------------------------|----------|---------------------|-------------|
 | service_name          | string                    | yes      |                     | Name of the service |
 | container_registry    | string                    | yes      |                     | Container registry from which to pull the image |
 | container_image       | string                    | yes      |                     | Image to pull |
